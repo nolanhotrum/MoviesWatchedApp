@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace MoviesWatchedApp
 {
     public partial class MainWindow : Window
     {
-        private const string ApiKey = "afae67e2"; // Replace with your actual OMDb API key
+        private readonly string ApiKey;
         private const string ApiUrl = "http://www.omdbapi.com/?apikey={0}&s={1}";
 
         public MainWindow()
@@ -29,6 +30,12 @@ namespace MoviesWatchedApp
             InitializeComponent();
             DatabaseHelper.InitializeDatabase();
             UpdateWatchedList();
+            ApiKey = ConfigurationManager.AppSettings["ApiKey"]; // Read API key from config
+
+            if (string.IsNullOrEmpty(ApiKey))
+            {
+                MessageBox.Show("API Key is missing in the configuration.");
+            }
         }
 
         private async void btnSearch_Click(object sender, RoutedEventArgs e)
